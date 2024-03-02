@@ -1,14 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const userRouter = require('./routes/User');
 const cors = require('cors');
 require('dotenv').config();
 const DB_URL = process.env.Atlas_URL;
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }))
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
+
+app.use('/user',userRouter);   
+
 
 const connect_to_db_and_start_server = async () => {
     try {
