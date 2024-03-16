@@ -1,56 +1,62 @@
 "use client";
 
-import styles from "../../app/login/index.module.css";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import styles from "../../app/login/index.module.css";
+import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import AuthServices from "@/services/AuthServices";
-import { useRouter } from "next/router"; // Corrected from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function LogPart() {
-  const { setUser, setIsAuthenticated } = useContext(AuthContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
 
-  const onSubmit = async (e) => {
+  const router = useRouter();
+  const authContext = useContext(AuthContext);
+
+  const onSubmit = (e) => {
     e.preventDefault();
-    try {
-      const data = await AuthServices.login({ username: email, password });
-      if (data.isAuthenticated) {
-        setUser(data.user);
-        setIsAuthenticated(true);
+
+    const user = {
+      username: e.target.email.value,
+      password: e.target.password.value,
+    };
+
+    AuthServices.login(user).then((data) => {
+      const { isAuthenticated, user, message } = data;
+      if (isAuthenticated) {
+        authContext.setUser(user);
+        authContext.setIsAuthenticated(isAuthenticated);
         router.push("/");
-      } else {
-        alert("Login failed: " + data.message.msgBody);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("An error occurred during login.");
+      } else alert("Email or Password is invalid")
     }
+    );
   };
 
   return (
     <div className={styles.logpart}>
-      <h1>Login</h1>
+      <h1 className={`${styles.colBlue} ${styles.noMarg}`}>Login</h1>
+
       <form onSubmit={onSubmit}>
-        <label>Email</label>
+        <p className={styles.colBlue}>Email</p>
         <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
           className={styles.input}
           type="text"
         />
-        <label>Password</label>
+
+        <p className={styles.colBlue}>Password</p>
         <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          name="password"
           className={styles.input}
           type="password"
         />
-        <button className={styles.button} type="submit">Login</button>
+
+        <input className={styles.button} type="submit" value="Login" />
       </form>
-      <p>Don't have an account? <Link href="/register">Register</Link></p>
+
+      <div className={styles.register}>
+        <p className={styles.noMarg}>Don't have an account?</p>
+        <Link href="/register">Register</Link>
+      </div>
     </div>
   );
 }

@@ -18,23 +18,26 @@ export default {
     // REGISTER
 
     register: async (user) => {
-        const res = await fetch('http://localhost:5000/user/register', {
-            method: "post",
-            body: JSON.stringify(user),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        if (res.status !== 401) {
-          return res.json().then(data => {
-            //console.log("Data is ", data);
-            return data;
-          });
+      try {
+        const response = await axios.post('http://localhost:5000/user/register', user, {
+          withCredentials: true,
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Registration error:", error);
+  
+        // Check if the error response has a data property with the expected structure
+        if (error.response && error.response.data) {
+          return error.response.data;
+        } else {
+          // Return a default structure with an error message if the response is not structured as expected
+          return {
+            isAuthenticated: false,
+            user: { username: "", role: "" },
+            message: { msgBody: "Registration failed due to an unexpected error.", msgError: true }
+          };
         }
-            
-
-        else
-            return { isAuthenticated: false, user: { username: "", role: "" } }
+      }
     },
 
     // LOGOUT
