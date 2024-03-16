@@ -14,12 +14,16 @@ const cookieExtractor = req => {
 passport.use(new JWTStrategy({
     jwtFromRequest: cookieExtractor,
     secretOrKey: 'secret'
-}, async(payload, done) => {
-    const user = await User.findById({_id: payload.sub});
-    if(!user){
-        return done(null, false);
+}, async (payload, done) => {
+    try {
+        const user = await User.findById(payload.sub);
+        if (!user) {
+            return done(null, false);
+        }
+        return done(null, user);
+    } catch (error) {
+        return done(error, false);
     }
-    return done(null, user);
 }));
 
 // auth with username & password

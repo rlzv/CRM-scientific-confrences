@@ -1,95 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+//import EventCard from "@/components/organisms/EventCard";
+//import groupsManagement from "@/components/organisms/groupsManagement";
+//import Nav from "@/components/organisms/Nav";
+//import NavAdmin from "@/components/organisms/NavAdmin";
+//import NavAuth from "@/components/organisms/NavAuth";
+import { AuthContext } from "@/context/AuthContext";
+import { useContext, useEffect, useState } from "react";
+import styles from "@/css/homepage.module.css";
+import axios from "axios";
+//import UpcomingEvents from "@/components/molecules/UpcomingEvents";
+import NotLogged from "@/components/molecules/NotLogged";
+
+
+
+// TODO: de implementat verificare daca userul e admin in AuthServices
+function isAdmin() {
+  return true;
+}
+
+
+
+export default function Home(props) {
+
+  const { isAuthenticated, isAdmin} = useContext(AuthContext);
+  const [events, setEvents] = useState([]);
+
+  // useEffect(() => {
+  //   async function fetchUndiscoveredEvents(){
+  //     setEvents((await axios.get('http://localhost:5000/events/discover',{withCredentials: true})).data.events)
+  //   }
+  //   fetchUndiscoveredEvents()
+  // },[])
+
+  if (!isAuthenticated) {
+    return <NotLogged />
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      {/* {isAdmin ? <NavAdmin /> : <NavAuth />} */}
+      
+      <br></br>
+      <br></br>
+      <br></br>
+
+      {/* <div className={styles.mainContainer}>
+        <div className={styles.discoverEvents}>
+          <h1 className={styles.discoverHeader}>Discover Events</h1>
+          {events && events.map((event) => (
+            <EventCard key={event._id} event={event} />
+          ))}
         </div>
-      </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+        <UpcomingEvents />
+      </div> */}
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </>
   );
 }
