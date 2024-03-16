@@ -14,29 +14,32 @@ const signToken = userID => {
     }, 'secret', {expiresIn: "1d"})
 }
 
-userRouter.post('/register', async(req,res) => {
-    const {username,password,role} = req.body;
+userRouter.post('/register', async (req, res) => {
+    const { username, password, role } = req.body;
     try {
-        const userExists = await User.findOne({username});
-        if(userExists) {
-            return res.status(400).json({message: {msgBody: "Username is already taken", msgError: true}});
+        const userExists = await User.findOne({ username });
+        if (userExists) {
+            return res.status(400).json({ message: { msgBody: "Username is already taken", msgError: true } });
         }
-        
-        const newUser = new User({username, password, role});
-        const savedUser = await newUser.save(); // Explicitly save the user to handle the promise
-        
-        // Only send a success response after confirming the user is saved
+
+        const newUser = new User({ username, password, role });
+        const savedUser = await newUser.save();
+
+        // If the user is successfully saved, sign a token for them
         if (savedUser) {
-            console.log("Saved user is", savedUser);
-            res.status(201).json({message: {msgBody: "Account successfully created", msgError: false}});
+            const token = signToken(savedUser._id); // Assuming _id is used as the subject for the token
+            // You could send the token as a JSON response or as a cookie
+            // Here's how to do it as a cookie:
+            res.cookie('access_token', token, { httpOnly: true, sameSite: 'strict' });
+            // And also send a response to the client
+            res.status(201).json({ isAuthenticated: true, user: { username, role }, token: token });
         } else {
-            // In case save operation was unsuccessful without throwing an error
             throw new Error('User creation failed for an unknown reason.');
         }
-    } catch(err) {
-        console.error(err); // Log the error to the server's console
-        res.status(500).json({message: {msgBody: "An error occurred during registration", msgError: true}});
-    } 
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: { msgBody: "An error occurred during registration", msgError: true } });
+    }
 });
 
 userRouter.post('/login', passport.authenticate('local', {session: false}), (req,res) => {

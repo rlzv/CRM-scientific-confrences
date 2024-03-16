@@ -7,7 +7,7 @@ import {useRouter} from 'next/navigation';
 
 export default function LogPart() {
 
-  const router = useRouter();
+  const router = useRouter()
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -18,13 +18,11 @@ export default function LogPart() {
     };
 
     AuthServices.register(user).then((data) => {
-      const { user, message } = data;
-
-      if(message.msgError){
-        alert(message.msgBody);
-      }
+      if (data.message && data.message.msgError) {
+        alert(data.message.msgBody);
+    }
       else
-        router.push('/');
+        router.push('/')
     });
   };
 
