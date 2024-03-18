@@ -4,14 +4,18 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/User');
 const cors = require('cors');
+const eventsRouter = require('./routes/Event');
 const DB_URL = process.env.Atlas_URL;
 
+
 const app = express();
+
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 
-app.use('/user',userRouter);   
+app.use('/user',userRouter);
+app.use('/events', eventsRouter);   
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 
 
