@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
     
-    // LOGIN
+    //_____________________________Logare_______________________________
     login: async (user) => {
         try {
           const res = await axios.post('http://localhost:5000/user/login', user, {
@@ -14,33 +14,34 @@ export default {
           return { isAuthenticated: false, user: { username: '', role: '' } };
         }
       },
+    
 
-    // REGISTER
+
+
+
+
+    //_____________________________Register________________________________________
 
     register: async (user) => {
-      try {
-        const response = await axios.post('http://localhost:5000/user/register', user, {
-          withCredentials: true,
-        });
-        return response.data;
-      } catch (error) {
-        console.error("Registration error:", error);
-  
-        // Check if the error response has a data property with the expected structure
-        if (error.response && error.response.data) {
-          return error.response.data;
-        } else {
-          // Return a default structure with an error message if the response is not structured as expected
-          return {
-            isAuthenticated: false,
-            user: { username: "", role: "" },
-            message: { msgBody: "Registration failed due to an unexpected error.", msgError: true }
-          };
-        }
-      }
+        const res = await fetch('http://localhost:5000/user/register', {
+            method: "post",
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        if (res.status !== 401)
+            return res.json().then(data => data)
+
+        else
+            return { isAuthenticated: false, user: { username: "", role: "" } }
     },
 
-    // LOGOUT
+
+
+
+
+    //_____________________________Logout__________________________________________
     logout: async () => {
       try {
         const res = await fetch('http://localhost:5000/user/logout',{credentials: 'include'});
@@ -51,31 +52,31 @@ export default {
         throw error;
       }
     },
+    
 
-    // AUTHENTICATED
+
+
+
+
+
+
+    //_____________________________Este authentificat_______________________________
      isAuthenticated:  () => {
        return fetch('http://localhost:5000/user/authenticated',{credentials: 'include'})
             .then(res => {
                 if (res.status !== 401)
-                return res.json().then(data => {
-                  //console.log("Data is ", data);
-                  return data;
-                });
+                    return res.json().then(data => data)
                 else
                     return { isAuthenticated: false, user: { username: "", role: "" } }
             })
      },
 
-    // ORGANIZER
+    //_____________________________Este admin_______________________________
     isAdmin:  () => {
     return fetch('http://localhost:5000/user/admin',{credentials: 'include'})
           .then(res => {
-            if (res.status !== 401)
-                return res.json().then(data => {
-                  //console.log("Data is ", data);
-                  return data;
-                });
-                  
+              if (res.status !== 401)
+                  return res.json().then(data => data)
               else
                   return { isAdmin: false }
           })

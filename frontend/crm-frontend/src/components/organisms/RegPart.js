@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "../../app/login/index.module.css";
 import AuthServices from "@/services/AuthServices";
-import {useRouter} from 'next/navigation';
+import {useRouter} from 'next/navigation'
 
 export default function LogPart() {
 
@@ -18,9 +18,11 @@ export default function LogPart() {
     };
 
     AuthServices.register(user).then((data) => {
-      if (data.message && data.message.msgError) {
-        alert(data.message.msgBody);
-    }
+      const { user, message } = data;
+
+      if(message.msgError){
+        alert(message.msgBody)
+      }
       else
         router.push('/')
     });

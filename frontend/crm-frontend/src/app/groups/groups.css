@@ -1,0 +1,100 @@
+.container {
+    width: 90%;
+    position: fixed;
+    height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #3989d4;
+    padding: 20px 80px;
+    box-shadow: 0 5px 15px rgba(0, 23, 126, 0.938);
+}
+
+.logo {
+    height: 80px;
+    width: 80px;
+    opacity: 1;  
+}
+
+
+#navbarElements {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#navbarElements li {
+    list-style: none;
+    padding: 0 20px;
+    position: relative;
+}
+
+#navbarElements li a {
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333333;
+    transition: 0.3s ease-in-out;
+}
+
+
+#navbarElements li a.admin {
+    color: #EE4747;
+}
+#navbarElements li a:hover {
+    color: #f5f5f5;
+} 
+
+#navbarElements li a:hover::after,
+#navbarElements li a.admin::after {
+    content: '';
+    width: 30%;
+    height: 2px;
+    background-color:#f5f5f5;
+    position: absolute;
+    bottom: -4px;
+    left: 20px;
+}
+
+#mobile {
+    display: none;
+}
+
+@media screen and (max-width:769px) {
+    .container {
+        z-index: 2;
+    }
+
+    #navbarElements {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        position: fixed;
+        top: 70px;
+        right: -45%;
+        width: 40%;
+        height: 100vh;
+        background-color: #3989d4   ;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.6);
+        padding: 40px 0 0 10px;
+    }
+
+    #navbarElements.active {
+        right: 0px;
+    }
+
+    #navbarElements li {
+        margin-bottom: 25px;
+    }
+
+    #mobile {
+        display: block;
+        cursor: pointer;    
+    }
+    /* target the fontawesome icon */
+    #mobile i {
+        font-size: 25px;
+        cursor: pointer;
+    }
+}
